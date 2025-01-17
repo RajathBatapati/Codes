@@ -1,8 +1,8 @@
 /**
  * @file uart_eeprom_nvs.c
- * @brief UART communication with chunked data storage and retrieval using EEPROM (NVS).
+ * @brief UART communication with chunked data storage and retrieval using (NVS).
  *
- * This program implements UART communication, storing received data in EEPROM
+ * This program implements UART communication, storing received data in NVS flash partition
  * (emulated using NVS) in fixed-size chunks and retrieving it for retransmission.
  *
  * @author Rajath B T
@@ -25,7 +25,7 @@
 #define TXD_PIN GPIO_NUM_17        ///< UART TX pin
 #define RXD_PIN GPIO_NUM_16        ///< UART RX pin
 #define UART_BUFFER_SIZE 1024      ///< UART buffer size
-#define EEPROM_CHUNK_SIZE 101      ///< Number of bytes per chunk stored in EEPROM
+#define EEPROM_CHUNK_SIZE 101      ///< Number of bytes per chunk stored in NVS
 
 static const char *LOG_TAG = "UART_COMM"; ///< Log tag for UART communication module
 static nvs_handle_t eeprom_handle;       ///< Handle for NVS (EEPROM emulation)
@@ -55,7 +55,7 @@ void uart_initialize(void) {
 }
 
 /**
- * @brief Initialize the EEPROM (NVS).
+ * @brief Initialize the NVS.
  *
  * Initializes the NVS storage. If the storage is corrupt or has no free pages,
  * it erases and reinitializes it.
@@ -73,7 +73,7 @@ void eeprom_initialize(void) {
 }
 
 /**
- * @brief Store data chunks into EEPROM.
+ * @brief Store data chunks into storage.
  *
  * Splits the input data into fixed-size chunks and stores each chunk into
  * NVS under a unique key.
@@ -111,7 +111,7 @@ void eeprom_store_chunks(const char *key_prefix, uint8_t *data, size_t length) {
 
 
 /**
- * @brief Retrieve and send stored data chunks from EEPROM.
+ * @brief Retrieve and send stored data chunks from flash.
  *
  * Reads all stored chunks from NVS and sends them over UART.
  *
@@ -143,7 +143,7 @@ void eeprom_retrieve_and_send_chunks(const char *key_prefix) {
 }
 
 /**
- * @brief Task to receive data from UART and store it in EEPROM.
+ * @brief Task to receive data from UART and store it in flash.
  */
 void uart_receive_task(void *pvParameters) {
     uint8_t rx_buffer[UART_BUFFER_SIZE];
@@ -160,7 +160,7 @@ void uart_receive_task(void *pvParameters) {
 }
 
 /**
- * @brief Task to retrieve and send stored data from EEPROM when signaled.
+ * @brief Task to retrieve and send stored data from NVS when signaled.
  */
 void uart_retrieve_and_send_task(void *pvParameters) {
     while (1) {
