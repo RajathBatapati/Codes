@@ -1,21 +1,21 @@
 
 # UART-to-EEPROM Storage and Retrieval System
 
-This project demonstrates how to receive data over UART, store it in EEPROM (using NVS), and retrieve it for transmission when required. It uses FreeRTOS tasks to manage UART communication and EEPROM storage efficiently.
+This project demonstrates how to receive data over UART, store it in NVS of flash memory (since EEPROM is not available in ESP32) and retrieve it for transmission when required. It uses FreeRTOS tasks to manage UART communication.
 
 ---
 
 ## **Features**
 1. **UART Communication**:
    - Configured with customizable baud rate, data bits, stop bits, and parity.
-   - Receives data over UART, processes it, and stores it in EEPROM.
+   - Receives data over UART, processes it, and stores it in NVS.
 
-2. **EEPROM (NVS) Storage**:
+2. **(NVS) Storage**:
    - Splits received data into fixed-size chunks.
-   - Stores each chunk in EEPROM with a unique key.
+   - Stores each chunk in NVS with a unique key.
 
 3. **Data Retrieval**:
-   - Retrieves stored data from EEPROM.
+   - Retrieves stored data from NVS.
    - Sends the retrieved data back over UART.
 
 4. **Event-Driven Design**:
@@ -43,21 +43,21 @@ This project demonstrates how to receive data over UART, store it in EEPROM (usi
 - **Receive Task (`uart_receive_task`)**:
   - Reads data from UART using `uart_read_bytes`.
   - Logs the received data.
-  - Stores the data in EEPROM by splitting it into chunks (defined by `CHUNK_SIZE`).
+  - Stores the data in NVS by splitting it into chunks (defined by `CHUNK_SIZE`).
   - Signals the retrieval task using a FreeRTOS semaphore.
 
 ### **3. Data Storage**
-- **Chunked Storage in EEPROM**:
+- **Chunked Storage in NVS flash partition**:
   - Data is divided into fixed-size chunks (`CHUNK_SIZE = 101` bytes).
   - Each chunk is assigned a unique key (e.g., `uart_data_0`, `uart_data_1`).
   - The `eeprom_store_chunks` function handles the storage:
     - Logs the chunk being stored.
-    - Writes the chunk to EEPROM using `nvs_set_blob`.
+    - Writes the chunk to NVS using `nvs_set_blob`.
 
 ### **4. Data Retrieval and Transmission**
 - **Retrieve and Send Task (`uart_retrieve_and_send_task`)**:
   - Waits for the semaphore signal indicating new data is available.
-  - Retrieves stored chunks from EEPROM using the `retrieve_and_send_chunks` function.
+  - Retrieves stored chunks from NVS using the `retrieve_and_send_chunks` function.
   - Logs and sends the retrieved data back over UART.
 
 ---
@@ -84,7 +84,7 @@ This project demonstrates how to receive data over UART, store it in EEPROM (usi
 - Send data to the ESP32 over UART using a serial terminal or another device.
 - Observe the logs in the monitor:
   - Data received via UART.
-  - Data stored in EEPROM in chunks.
+  - Data stored in NVS in chunks.
   - Data retrieved and sent back over UART.
 
 ---
@@ -103,7 +103,7 @@ This project demonstrates how to receive data over UART, store it in EEPROM (usi
    - Stores received data in fixed-size chunks in EEPROM.
 
 4. **`retrieve_and_send_chunks()`**:
-   - Retrieves stored data from EEPROM and sends it back over UART.
+   - Retrieves stored data from NVS and sends it back over UART.
 
 5. **`uart_receive_task()`**:
    - Continuously receives data from UART and stores it in EEPROM.
