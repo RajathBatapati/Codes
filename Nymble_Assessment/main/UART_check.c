@@ -1,5 +1,5 @@
 /**
- * @file uart_eeprom_nvs.c
+ * @file uart_check.c
  * @brief UART communication with chunked data storage and retrieval using (NVS).
  *
  * This program implements UART communication, storing received data in NVS flash partition
